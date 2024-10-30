@@ -2,7 +2,7 @@
 <h1 align="center">Claudia Moncada👋</h1>
 </div>
 <h4 align="center">
-  <b><a href="">Segmentation</a></b>
+  <b><a href="Segmentation">Segmentation</a></b>
   •
   <b><a href="">Sentiment Analysis</a></b>
   •
