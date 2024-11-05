@@ -10,6 +10,8 @@
   •
   <b><a href="">Churn</a></b>
   •
+  <b><a href="Text_Processing">Text Processing</a></b>
+  •
   <a href="GANs">GANs</a>
 </h3>
 <img src="Claudia_Banner.png">
