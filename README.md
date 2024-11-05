@@ -4,11 +4,13 @@
 <h4 align="center">
   <b><a href="Segmentation">Segmentation</a></b>
   •
+  <b><a href="Classification">Classification</a></b>
+  •
   <b><a href="">Sentiment Analysis</a></b>
   •
   <b><a href="">Churn</a></b>
   •
-  <a href="">GANs</a>
+  <a href="GANs">GANs</a>
 </h3>
 <img src="Claudia_Banner.png">
 
