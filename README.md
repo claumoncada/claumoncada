@@ -8,7 +8,7 @@
   •
   <b><a href="">Sentiment Analysis</a></b>
   •
-  <b><a href="">Churn</a></b>
+  <b><a href="Churn">Churn</a></b>
   •
   <b><a href="Text_Processing">Text Processing</a></b>
   •
