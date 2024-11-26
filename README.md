@@ -6,9 +6,9 @@
   •
   <b><a href="Classification">Classification</a></b>
   •
-  <b><a href="">Sentiment Analysis</a></b>
+  <b><a href="Sentiment_Analysis">Sentiment Analysis</a></b>
   •
-  <b><a href="">Churn</a></b>
+  <b><a href="Churn">Churn</a></b>
   •
   <b><a href="Text_Processing">Text Processing</a></b>
   •
