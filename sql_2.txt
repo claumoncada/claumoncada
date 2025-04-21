@@ -1,0 +1,100 @@
+-- Sentencias SQL para la carga de los datos en el Data Warehouse 
+
+-- Insertar datos en la tabla de hechos FactTransactions
+INSERT INTO DWH_TRANS.dbo.FactTransactions (TransactionID, ProductID, StoreID, Quantity, Revenue, OrderDate, DeliveryDate, Year, Month, Quarter)
+SELECT 
+    T.TransactionID, 
+    T.ProductID, 
+    T.StoreID, 
+    T.Quantity, 
+    (T.Quantity * P.ProductPrice) AS Revenue, -- Calcular el ingreso
+    T.OrderDate,
+    T.DeliveryDate,
+    YEAR(T.OrderDate) AS Year,  -- Año derivado de la fecha de la orden
+    MONTH(T.OrderDate) AS Month,-- Mes derivado de la fecha de la orden
+    CASE 
+        WHEN MONTH(T.OrderDate) BETWEEN 1 AND 3 THEN 1
+        WHEN MONTH(T.OrderDate) BETWEEN 4 AND 6 THEN 2
+        WHEN MONTH(T.OrderDate) BETWEEN 7 AND 9 THEN 3
+        ELSE 4
+    END AS Quarter -- Trimestre derivado de la fecha de la orden
+FROM 
+    DWH_TRANS.dbo.Transactions T
+JOIN 
+    DWH_TRANS.dbo.Product P ON T.ProductID = P.ProductID;
+
+
+-- Insertar datos en la tabla de dimensiones DimProduct
+INSERT INTO DWH_TRANS.dbo.DimProduct (ProductID, ProductName, ProductBrand, ProductColor, CategoryName, SubcategoryName, ProductCost, ProductPrice)
+SELECT 
+    P.ProductID,
+    P.ProductName,
+    P.ProductBrand,
+    P.ProductColor,
+    C.CategoryName,
+    S.SubcategoryName,
+    P.ProductCost,
+    P.ProductPrice
+FROM 
+    DWH_TRANS.dbo.Product P
+JOIN 
+    DWH_TRANS.dbo.ProductSubcategory S ON P.SubcategoryID = S.SubcategoryID
+JOIN 
+    DWH_TRANS.dbo.ProductCategory C ON S.CategoryID = C.CategoryID;
+
+
+-- Insertar datos en la tabla de dimensiones DimCustomer
+INSERT INTO DWH_TRANS.dbo.DimCustomer (CustomerID, CustomerName, CustomerGender, CustomerDOB, CustomerCity, CustomerStateCode, CustomerState, CustomerZip, CustomerCountry, CustomerContinent)
+SELECT 
+    C.CustomerID,
+    C.CustomerName,
+    C.CustomerGender,
+    C.CustomerDOB,
+    L.CustomerCity,
+    S.CustomerStateCode,
+    S.CustomerState,
+    Z.CustomerZip,
+    Co.CustomerCountry,
+    Co.CustomerContinent
+FROM 
+    DWH_TRANS.dbo.Customer C
+JOIN 
+    DWH_TRANS.dbo.CustomerLocation L ON C.CustomerLocationID = L.LocationID
+JOIN 
+    DWH_TRANS.dbo.CustomerState S ON L.StateID = S.StateID
+JOIN 
+    DWH_TRANS.dbo.CustomerZipCode Z ON S.ZipID = Z.ZipID
+JOIN 
+    DWH_TRANS.dbo.CustomerCountry Co ON Z.CountryID = Co.CountryID;
+
+
+-- Insertar datos en la tabla de dimensiones DimStore
+INSERT INTO DWH_TRANS.dbo.DimStore (StoreID, StoreSqMeters, StoreOpenDate, StoreCountry, StoreState)
+SELECT 
+    S.StoreID,
+    S.StoreSqMeters,
+    S.StoreOpenDate,
+    L.StoreCountry,
+    L.StoreState
+FROM 
+    DWH_TRANS.dbo.Stores S
+JOIN 
+    DWH_TRANS.dbo.StoreLocation L ON S.StoreLocationID = L.StoreLocationID;
+
+
+-- Insertar datos en la tabla de dimensiones DimDate
+INSERT INTO DWH_TRANS.dbo.DimDate (DateID, Year, Month, MonthName, Quarter, DayOfWeek)
+SELECT DISTINCT 
+    T.OrderDate AS DateID,
+    YEAR(T.OrderDate) AS Year,
+    MONTH(T.OrderDate) AS Month,
+    DATENAME(MONTH, T.OrderDate) AS MonthName,
+    CASE 
+        WHEN MONTH(T.OrderDate) BETWEEN 1 AND 3 THEN 1
+        WHEN MONTH(T.OrderDate) BETWEEN 4 AND 6 THEN 2
+        WHEN MONTH(T.OrderDate) BETWEEN 7 AND 9 THEN 3
+        ELSE 4
+    END AS Quarter,
+    DATENAME(WEEKDAY, T.OrderDate) AS DayOfWeek
+FROM 
+    DWH_TRANS.dbo.Transactions T;
