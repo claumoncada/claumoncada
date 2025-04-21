@@ -1,0 +1,62 @@
+TABLE FactTransactions {
+  TransactionID INT
+  ProductID INT
+  StoreID INT
+  Quantity INT
+  Revenue DECIMAL(10,2)
+  OrderDate DATE
+  DeliveryDate DATE
+  Year INT
+  Month INT
+  Quarter INT
+}
+
+TABLE DimProduct {
+  ProductID INT
+  ProductName VARCHAR(255)
+  ProductBrand VARCHAR(255)
+  ProductColor VARCHAR(255)
+  CategoryName VARCHAR(255)
+  SubcategoryName VARCHAR(255)
+  ProductCost DECIMAL(10,2)
+  ProductPrice DECIMAL(10,2)
+}
+
+TABLE DimCustomer {
+  CustomerID INT
+  CustomerName VARCHAR(255)
+  CustomerGender VARCHAR(10)
+  CustomerDOB DATE
+  CustomerCity VARCHAR(255)
+  CustomerStateCode VARCHAR(10)
+  CustomerState VARCHAR(255)
+  CustomerZip VARCHAR(20)
+  CustomerCountry VARCHAR(255)
+  CustomerContinent VARCHAR(255)
+}
+
+TABLE DimStore {
+  StoreID INT
+  StoreSqMeters INT
+  StoreOpenDate DATE
+  StoreCountry VARCHAR(255)
+  StoreState VARCHAR(255)
+}
+
+TABLE DimDate {
+  DateID DATE
+  Year INT
+  Month INT
+  MonthName VARCHAR(50)
+  Quarter INT
+  DayOfWeek VARCHAR(50)
+}
+
+Ref {FactTransactions.ProductID > DimProduct.ProductID} // many-to-one
+Ref {FactTransactions.StoreID > DimStore.StoreID} // many-to-one
+Ref {FactTransactions.OrderDate > DimDate.DateID} // many-to-one
+Ref {FactTransactions.DeliveryDate > DimDate.DateID} // many-to-one
+Ref {FactTransactions.TransactionID > DimCustomer.CustomerID} // many-to-one
+
+
+//Ref: "FactTransactions"."OrderDate" < "FactTransactions"."TransactionID"
